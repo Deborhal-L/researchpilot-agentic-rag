@@ -41,8 +41,29 @@ if TESSERACT_DIR.exists():
 if TESSDATA_DIR.exists():
     os.environ["TESSDATA_PREFIX"] = str(TESSDATA_DIR)
 
-R = Retriever()
-ACTIVE_DOC_FILE = Path("data/index/active_document.txt")
+INDEX = Path("data/index")
+
+
+def load_retriever():
+    required_files = [
+        INDEX / "chunks.json",
+        INDEX / "bm25.pkl",
+        INDEX / "faiss.index",
+    ]
+
+    if not all(path.exists() for path in required_files):
+        print("Index not found. Upload a document to build it.", flush=True)
+        return None
+
+    try:
+        return Retriever()
+    except Exception as exc:
+        print(f"Retriever initialization deferred: {exc}", flush=True)
+        return None
+
+
+R = load_retriever()
+ACTIVE_DOC_FILE = INDEX / "active_document.txt"
 
 LAST_UPLOADED_DOC_ID = (
     ACTIVE_DOC_FILE.read_text(encoding="utf-8").strip()
@@ -113,7 +134,7 @@ async def upload_document(file: UploadFile = File(...)):
                     detail="The uploaded file is not a valid PDF.",
                 )
 
-            
+
             with pymupdf.open(stream=content, filetype="pdf") as pdf:
                 extracted_pages = []
 
@@ -170,14 +191,19 @@ async def upload_document(file: UploadFile = File(...)):
         destination = RAW / f"{stem}_{counter}.txt"
         counter += 1
 
+
     try:
         destination.write_text(text, encoding="utf-8")
 
         # Rebuild indexes from all TXT files in data/raw.
         build_index()
 
-        # Load the newly built indexes into the active retriever.
-        R = Retriever()
+        # Load the newly built indexes.
+        R = load_retriever()
+
+        if R is None:
+           raise RuntimeError("Failed to load the document index.")
+
         # Save the most recently uploaded document ID.
         ACTIVE_DOC_FILE.parent.mkdir(parents=True, exist_ok=True)
         ACTIVE_DOC_FILE.write_text(destination.stem, encoding="utf-8")
@@ -203,14 +229,20 @@ async def upload_document(file: UploadFile = File(...)):
     }
 
 
+
 @app.post("/ask")
 def ask(body: Ask):
+    if R is None:
+        raise HTTPException(
+            status_code=503,
+            detail="No document index is available. Upload a TXT or PDF document first.",
+        )
+
     question = body.question.strip()
     normalized_question = re.sub(
         r"[^a-z0-9]+", " ", question.casefold()
     ).strip()
 
-    # Explicit requests involving multiple documents use global search.
     global_search_terms = (
         "compare",
         "difference",
@@ -235,10 +267,8 @@ def ask(body: Ask):
     selected_document_id = None
 
     if not use_global_search:
-        # Default to the latest uploaded document.
         selected_document_id = LAST_UPLOADED_DOC_ID
 
-        # If the question names another indexed document, use that one.
         indexed_doc_ids = sorted(
             {
                 chunk["doc_id"]
@@ -250,7 +280,6 @@ def ask(body: Ask):
         )
 
         for doc_id in indexed_doc_ids:
-            # Ignore numeric suffixes added to duplicate uploads.
             base_id = re.sub(r"_\d+$", "", doc_id)
             title = re.sub(
                 r"[^a-z0-9]+", " ", base_id.casefold()
@@ -261,35 +290,35 @@ def ask(body: Ask):
                 break
 
     history = body.history[-6:]
-
     context = ""
 
     if history:
         context = "\n".join(
-        f"{item.get('role', 'user')}: {item.get('content', '')}"
-        for item in history
-        if item.get("role") in {"user", "assistant"}
-        and item.get("content", "").strip()
-    )
+            f"{item.get('role', 'user')}: {item.get('content', '')}"
+            for item in history
+            if item.get("role") in {"user", "assistant"}
+            and item.get("content", "").strip()
+        )
 
     contextual_question = question
 
     if context:
-      contextual_question = (
-        "Previous conversation:\n"
-        f"{context}\n\n"
-        "Current question:\n"
-        f"{question}\n\n"
-        "Interpret the current question using the previous "
-        "conversation when needed. Answer only using retrieved "
-        "document evidence."
-    )
+        contextual_question = (
+            "Previous conversation:\n"
+            f"{context}\n\n"
+            "Current question:\n"
+            f"{question}\n\n"
+            "Interpret the current question using the previous "
+            "conversation when needed. Answer only using retrieved "
+            "document evidence."
+        )
 
     t = run_agent(
         contextual_question,
         R,
-       document_id=selected_document_id,
-)
+        document_id=selected_document_id,
+    )
+
     return {
         "status": t["status"],
         "answer": t["answer"],

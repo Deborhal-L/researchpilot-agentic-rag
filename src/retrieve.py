@@ -9,6 +9,8 @@ IDX = Path("data/index")
 
 class Retriever:
     def __init__(self):
+        from sentence_transformers import SentenceTransformer, CrossEncoder
+
         self.chunks = json.loads((IDX / "chunks.json").read_text())
         self.bm25 = pickle.load(open(IDX / "bm25.pkl", "rb"))
         self.index = faiss.read_index(str(IDX / "faiss.index"))

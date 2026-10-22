@@ -3,7 +3,6 @@ import json, pickle, re
 from pathlib import Path
 import numpy as np, faiss
 from rank_bm25 import BM25Okapi
-from sentence_transformers import SentenceTransformer
 from .config import EMBED_MODEL, CHUNK_TOKENS, CHUNK_OVERLAP
 
 RAW, OUT = Path("data/raw"), Path("data/index")
@@ -19,6 +18,8 @@ def chunk_doc(doc_id: str, text: str):
             yield {"chunk_id": f"{doc_id}#{i}", "doc_id": doc_id, "text": piece}
 
 def main():
+    from sentence_transformers import SentenceTransformer
+
     OUT.mkdir(parents=True, exist_ok=True)
     chunks = []
     for p in sorted(RAW.glob("*.txt")):
