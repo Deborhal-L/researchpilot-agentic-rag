@@ -7,3 +7,5 @@ uvicorn
 streamlit
 anthropic
 python-dotenv
+pymupdf
+python-multipart
