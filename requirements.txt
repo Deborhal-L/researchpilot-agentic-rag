@@ -1,0 +1,9 @@
+rank_bm25
+sentence-transformers
+faiss-cpu
+numpy
+fastapi
+uvicorn
+streamlit
+anthropic
+python-dotenv

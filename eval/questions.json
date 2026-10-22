@@ -1,0 +1,262 @@
+[
+  {
+    "id": "q001",
+    "type": "compare",
+    "question": "How do the two sample documents differ in their mitigation recommendations?",
+    "expected_chunks": [
+      "sample_a#0",
+      "sample_b#0"
+    ],
+    "reference_answer": "The web server document recommends validating and normalizing file paths, restricting file access, and applying the vendor update. The database server document recommends strong passwords, multi-factor authentication where supported, restricting network access, and applying vendor updates.",
+    "answerable": true
+  },
+  {
+    "id": "q002",
+    "type": "single-hop",
+    "question": "How can directory traversal be detected according to the web server document?",
+    "expected_chunks": [
+      "sample_a#0"
+    ],
+    "reference_answer": "Review web server logs for unusual requests containing path traversal patterns.",
+    "answerable": true,
+    "document_id": "sample_a"
+  },
+  {
+    "id": "q003",
+    "type": "unanswerable",
+    "question": "What CVSS score is assigned to the directory traversal issue?",
+    "expected_chunks": [],
+    "reference_answer": "",
+    "answerable": false,
+    "document_id": "sample_a"
+  },
+  {
+    "id": "q004",
+    "type": "single-hop",
+    "question": "What is the impact of directory traversal?",
+    "expected_chunks": [
+      "sample_a#0"
+    ],
+    "reference_answer": "An attacker may access files outside the intended web directory if paths are not validated.",
+    "answerable": true,
+    "document_id": "sample_a"
+  },
+  {
+    "id": "q005",
+    "type": "single-hop",
+    "question": "How can directory traversal be prevented?",
+    "expected_chunks": [
+      "sample_a#0"
+    ],
+    "reference_answer": "Validate and normalize file paths, restrict file access, and apply the vendor update.",
+    "answerable": true,
+    "document_id": "sample_a"
+  },
+  {
+    "id": "q006",
+    "type": "single-hop",
+    "question": "What vulnerability affects the example database server?",
+    "expected_chunks": [
+      "sample_b#0"
+    ],
+    "reference_answer": "The document describes weak authentication.",
+    "answerable": true,
+    "document_id": "sample_b"
+  },
+  {
+    "id": "q007",
+    "type": "single-hop",
+    "question": "What is the impact of weak database authentication?",
+    "expected_chunks": [
+      "sample_b#0"
+    ],
+    "reference_answer": "Weak credentials or insecure authentication may allow unauthorized access.",
+    "answerable": true,
+    "document_id": "sample_b"
+  },
+  {
+    "id": "q008",
+    "type": "single-hop",
+    "question": "How can weak database authentication be detected?",
+    "expected_chunks": [
+      "sample_b#0"
+    ],
+    "reference_answer": "Review authentication logs for repeated failures and unexpected connections.",
+    "answerable": true,
+    "document_id": "sample_b"
+  },
+  {
+    "id": "q009",
+    "type": "single-hop",
+    "question": "How can database authentication be strengthened?",
+    "expected_chunks": [
+      "sample_b#0"
+    ],
+    "reference_answer": "Use strong passwords, multi-factor authentication where supported, restrict network access, and apply vendor updates.",
+    "answerable": true,
+    "document_id": "sample_b"
+  },
+  {
+    "id": "q010",
+    "type": "single-hop",
+    "question": "Why should file paths be validated in the web server?",
+    "expected_chunks": [
+      "sample_a#0"
+    ],
+    "reference_answer": "Path validation helps prevent attackers from accessing files outside the intended web directory.",
+    "answerable": true,
+    "document_id": "sample_a"
+  },
+  {
+    "id": "q011",
+    "type": "compare",
+    "question": "What logging indicators should be reviewed for the two vulnerabilities?",
+    "expected_chunks": [
+      "sample_a#0",
+      "sample_b#0"
+    ],
+    "reference_answer": "For directory traversal, review web server logs for path traversal patterns. For weak database authentication, review authentication logs for repeated failures and unexpected connections.",
+    "answerable": true
+  },
+  {
+    "id": "q012",
+    "type": "unanswerable",
+    "question": "Who discovered the directory traversal vulnerability?",
+    "expected_chunks": [],
+    "reference_answer": "",
+    "answerable": false,
+    "document_id": "sample_a"
+  },
+  {
+    "id": "q013",
+    "type": "unanswerable",
+    "question": "When was the database vulnerability first reported?",
+    "expected_chunks": [],
+    "reference_answer": "",
+    "answerable": false,
+    "document_id": "sample_b"
+  },
+  {
+    "id": "q014",
+    "type": "unanswerable",
+    "question": "What exact vendor patch version fixes the database vulnerability?",
+    "expected_chunks": [],
+    "reference_answer": "",
+    "answerable": false,
+    "document_id": "sample_b"
+  },
+  {
+    "id": "q015",
+    "type": "multi-part",
+    "question": "What is the impact of directory traversal, and how can it be detected?",
+    "expected_chunks": [
+      "sample_a#0"
+    ],
+    "reference_answer": "If paths are not validated, an attacker may access files outside the intended web directory. Review web server logs for path traversal patterns.",
+    "answerable": true,
+    "document_id": "sample_a"
+  },
+  {
+    "id": "q016",
+    "type": "single-hop",
+    "question": "What file-access restriction is recommended to help prevent directory traversal?",
+    "expected_chunks": [
+      "sample_a#0"
+    ],
+    "reference_answer": "Restrict file access to the permitted directory, validate and normalize file paths, and apply vendor updates.",
+    "answerable": true,
+    "document_id": "sample_a"
+  },
+  {
+    "id": "q017",
+    "type": "single-hop",
+    "question": "Which controls are recommended for the example database server?",
+    "expected_chunks": [
+      "sample_b#0"
+    ],
+    "reference_answer": "Enforce strong passwords, enable multi-factor authentication where supported, restrict network access, and apply vendor updates.",
+    "answerable": true,
+    "document_id": "sample_b"
+  },
+  {
+    "id": "q018",
+    "type": "compare",
+    "question": "What mitigation action is recommended for both the example web server and the example database server?",
+    "expected_chunks": [
+      "sample_a#0",
+      "sample_b#0"
+    ],
+    "reference_answer": "Both recommendations include applying vendor updates.",
+    "answerable": true
+  },
+  {
+    "id": "q019",
+    "type": "multi-part",
+    "question": "How should directory traversal be detected and prevented according to the web server document?",
+    "expected_chunks": [
+      "sample_a#0"
+    ],
+    "reference_answer": "Review web server logs for unusual requests containing path traversal patterns. Prevention includes validating and normalizing file paths, restricting file access to the permitted directory, and applying vendor updates.",
+    "answerable": true,
+    "document_id": "sample_a"
+  },
+  {
+    "id": "q020",
+    "type": "multi-part",
+    "question": "What detection signals and mitigation controls are described for weak database authentication?",
+    "expected_chunks": [
+      "sample_b#0"
+    ],
+    "reference_answer": "Detection includes reviewing authentication logs for repeated failed logins and unexpected connections. Mitigation includes strong passwords, multi-factor authentication where supported, network restrictions, and vendor updates.",
+    "answerable": true,
+    "document_id": "sample_b"
+  },
+  {
+    "id": "q021",
+    "type": "unanswerable",
+    "question": "What CVE identifier is assigned to the weak database authentication issue?",
+    "expected_chunks": [],
+    "reference_answer": "The supplied documents do not specify a CVE identifier for this issue.",
+    "answerable": false,
+    "document_id": "sample_b"
+  },
+  {
+    "id": "q022",
+    "type": "unanswerable",
+    "question": "On what calendar date was the first successful exploitation of either sample vulnerability recorded?",
+    "expected_chunks": [],
+    "reference_answer": "The supplied documents do not provide that date.",
+    "answerable": false
+  },
+  {
+    "id": "q023",
+    "type": "multi-part",
+    "question": "In the Energy Peak Detector case study, what work can be eliminated and what dependency must be preserved?",
+    "expected_chunks": [
+      "CD_Assign#0"
+    ],
+    "reference_answer": "The case study recommends eliminating only unobservable work while preserving the maximum-reduction dependency.",
+    "answerable": true,
+    "document_id": "CD_Assign"
+  },
+  {
+    "id": "q024",
+    "type": "single-hop",
+    "question": "What does the web server document recommend about validating and normalizing file paths?",
+    "expected_chunks": [
+      "sample_a#0"
+    ],
+    "reference_answer": "Validate and normalize file paths to help prevent directory traversal, and restrict file access to the permitted directory.",
+    "answerable": true,
+    "document_id": "sample_a"
+  },
+  {
+    "id": "q025",
+    "type": "unanswerable",
+    "question": "How many attempted attacks were recorded in the example database server's logs?",
+    "expected_chunks": [],
+    "reference_answer": "The supplied documents do not provide a count of recorded attack attempts.",
+    "answerable": false,
+    "document_id": "sample_b"
+  }
+]
