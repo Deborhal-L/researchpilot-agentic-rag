@@ -1,6 +1,5 @@
 import json, pickle
 import numpy as np, faiss
-from sentence_transformers import SentenceTransformer, CrossEncoder
 from pathlib import Path
 from .config import EMBED_MODEL, RERANK_MODEL, TOP_N, TOP_K
 from .ingest import tokenize
